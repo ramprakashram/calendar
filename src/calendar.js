@@ -10,7 +10,7 @@ class Calendar {
     const defaultOptions = {
       currentDate: today,
       format: DEFAULT_FORMAT,
-      monthFormat: 'yyyy年MM月',
+      monthFormat: 'yyyy/MM/dd',
       chooseDate: ''
     };
 
@@ -71,9 +71,13 @@ class Calendar {
   }
 
   renderWeeks() {
-    const weeks = ['日', '一', '二', '三', '四', '五', '六'];
+    const weeks = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Award'];
     const renderWeek = weeks.map(week => {
-      return `<span class=${s.weekItem}>${week}</span>`;
+      if (week === 'Awd') {
+        return `<span class=${s.weekItemAwards}>${week}</span>`;
+      } else {
+        return `<span class=${s.weekItem}>${week}</span>`;
+      }
     });
     const weeksEl = `<div class=${s.weekBox}>${renderWeek.join('')}</div>`;
     return weeksEl;
@@ -84,7 +88,8 @@ class Calendar {
     const days = this.generateCalendarGroup();
     const box = utils.createElement('div', s.dayBox);
 
-    days.forEach(day => {
+    console.log(days);
+    days.forEach((day, index) => {
       let dayItemClass = s.dayItem;
       const dayValue = day.value;
 
@@ -100,11 +105,21 @@ class Calendar {
         dayItemClass = `${dayItemClass} ${s.chooseDate}`;
       }
 
+      if ((index > 0 && index <= 31) && (index % 7 === 0)) {
+        // console.log(day.text, 'index : ', index)
+        const awardEl = utils.createElement('button', dayItemClass);
+        awardEl.setAttribute('id', 'award-' + (index / 6));
+        box.appendChild(awardEl);
+      }
+
       const dayEl = utils.createElement('button', dayItemClass);
-      dayEl.innerHTML = `<div class=${s.dayItemContainer}>
-      <span class=${s.dayItemText}>${day.text}</span></div>`;
-      dayEl.onclick = () => this.chooseDate(dayEl, dayValue);
+      if (day.type === 'current') {
+        dayEl.innerHTML = `<div class=${s.dayItemContainer}>
+        <span class=${s.dayItemText}>${day.text}</span></div>`;
+        dayEl.onclick = () => this.chooseDate(dayEl, dayValue);
+      }
       box.appendChild(dayEl);
+
     });
 
     const replacedNode = daysEl.firstChild;
@@ -130,7 +145,7 @@ class Calendar {
     const currentMonthDays = new Date(currentYear, currentMonth, 0).getDate(); // 获取本月天数
     const weekOfCurrentMonth = new Date(
       `${currentYear}/${utils.formatNumber(currentMonth)}/01`
-    ).getDay(); // 获取本月第一天星期几
+    ).getDay() - 1; // 获取本月第一天星期几
     const prevMonthDays = new Date(prevMonthYear, prevMonthMonth, 0).getDate(); // 获取上月天数
 
     const dayList = [];
@@ -237,8 +252,11 @@ class Calendar {
 
   handelShowMonth() {
     const { showMonthEl, currentDate, monthFormat } = this.options;
-    const showMonth = utils.dateFormat(new Date(currentDate), monthFormat);
-    showMonthEl.textContent = showMonth;
+    // const showMonth = utils.dateFormat(new Date(currentDate), monthFormat);
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    showMonthEl.textContent = monthNames[new Date(currentDate).getMonth()] + ' ' + new Date(currentDate).getFullYear();
   }
 }
 

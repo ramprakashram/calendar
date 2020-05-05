@@ -12,8 +12,10 @@
 
 .showMonth {
   margin: 0 40px;
-  font-size: 30px;
-  color: #000;
+  font-size: 44px;
+  color: #f0554a;
+  font-weight: 600;
+  margin-top: 2px;
 }
 
 .controllerArrow {
@@ -40,9 +42,16 @@
 
 .weekItem {
   flex: 1;
-  font-size: 30px;
+  font-size: 32px;
   text-align: center;
-  color: #b8bfc6;
+  color: #000;
+}
+
+.weekItemAwards {
+  flex: 1;
+  font-size: 32px;
+  text-align: center;
+  color: #bdbdbd;
 }
 
 .dayBox {
@@ -56,9 +65,10 @@
   align-items: center;
   justify-content: center;
   margin: 5px 0;
-  flex: 0 0 calc(100% / 7);
+  flex: 0 0 12.5%;
   height: 72px;
   border: 0;
+  padding-left: 12px;
   font-size: 30px;
   background: none;
 }

@@ -1,7 +1,7 @@
 {
-  "name": "calendar-lite",
-  "version": "0.1.0",
-  "description": "calendar 日历",
+  "name": "pq-calendar-lite",
+  "version": "0.1.1",
+  "description": "calendar for pq",
   "main": "lib/calendar.js",
   "scripts": {
     "lint": "yarn lint:es && yarn lint:style",
