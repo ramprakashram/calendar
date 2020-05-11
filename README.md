@@ -1,10 +1,4 @@
-# Clendar [Demo](https://simbawus.github.io/calendar)
-
-[![npm](https://img.shields.io/npm/v/calendar-lite.svg)](https://www.npmjs.com/package/calendar-lite)
-[![npm](https://img.shields.io/npm/dt/calendar-lite.svg)](https://www.npmjs.com/package/calendar-lite)
-[![GitHub license](https://img.shields.io/github/license/simbawus/calendar.svg)](https://github.com/simbawus/calendar/blob/master/LICENSE)
-
-###### [中文 README](README-zh_CN.md)
+# Calendar [Demo](https://simbawus.github.io/calendar)
 
 - Develop with native javascript, doesn't rely on any frameworks and libraries.
 - Easy API, easy use.
@@ -29,7 +23,7 @@
 ### Install
 
 ```shell
-yarn add calendar-lite --dev
+npm install pq-calendar-lite
 ```
 
 ### Usage Example
@@ -60,9 +54,21 @@ function onDayClick(date) {
   console.log(date); // choose date
 }
 
+const daysWithActions = [
+  {
+    date: new Date('2020/05/01').toISOString(),
+    color: 'blue'
+  },
+  {
+    date: new Date('2020/05/04').toISOString(),
+    color: 'blue'
+  }
+];
+
 new Calendar({
   el: document.querySelector("#app"),
-  currentDate: "2019/08/28",
+  daysWithActions,
+  showAwards: true,
   onDayClick
 });
 ```
