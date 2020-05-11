@@ -65,16 +65,30 @@
   align-items: center;
   justify-content: center;
   margin: 5px 0;
+  flex: 0 0 calc(100% / 7);
+  height: 72px;
+  border: 0;
+  padding: 0 !important;
+  font-size: 30px;
+  background: none;
+}
+
+.dayItemWithAward {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px 0;
   flex: 0 0 12.5%;
   height: 72px;
   border: 0;
-  padding-left: 12px;
+  padding: 0 !important;
   font-size: 30px;
   background: none;
 }
 
 .dayItemContainer {
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: center;
   width: 72px;
@@ -92,6 +106,15 @@
   .dayItemText {
     color: #e1e4e7;
   }
+}
+
+.dayWithActions {
+  // background-color: #f0554a;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 4px;
 }
 
 .today {

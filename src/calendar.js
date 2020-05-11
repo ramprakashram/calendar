@@ -21,6 +21,10 @@ class Calendar {
       );
     }
 
+    // if (options.daysWithActions) {
+    //   console.log(options.daysWithActions);
+    // }
+
     this.options = { ...defaultOptions, ...options };
 
     this.init();
@@ -71,7 +75,10 @@ class Calendar {
   }
 
   renderWeeks() {
-    const weeks = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Award'];
+    const weeks = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    if (this.options.showAwards) {
+      weeks.push('Award');
+    }
     const renderWeek = weeks.map(week => {
       if (week === 'Awd') {
         return `<span class=${s.weekItemAwards}>${week}</span>`;
@@ -84,13 +91,14 @@ class Calendar {
   }
 
   renderDays() {
-    const { chooseDate, daysEl } = this.options;
+    const { chooseDate, daysEl, daysWithActions } = this.options;
     const days = this.generateCalendarGroup();
     const box = utils.createElement('div', s.dayBox);
 
-    console.log(days);
+    // console.log(days);
+    // console.log(daysWithActions);
     days.forEach((day, index) => {
-      let dayItemClass = s.dayItem;
+      let dayItemClass = this.options.showAwards ? s.dayItemWithAward : s.dayItem;
       const dayValue = day.value;
 
       if (day.type !== 'current') {
@@ -105,17 +113,22 @@ class Calendar {
         dayItemClass = `${dayItemClass} ${s.chooseDate}`;
       }
 
-      if ((index > 0 && index <= 31) && (index % 7 === 0)) {
+      if (this.options.showAwards && (index > 0 && index <= 31) && (index % 7 === 0)) {
         // console.log(day.text, 'index : ', index)
-        const awardEl = utils.createElement('button', dayItemClass);
+        const awardEl = utils.createElement('div', dayItemClass);
         awardEl.setAttribute('id', 'award-' + (index / 6));
         box.appendChild(awardEl);
       }
 
-      const dayEl = utils.createElement('button', dayItemClass);
+      const dayEl = utils.createElement('div', dayItemClass);
       if (day.type === 'current') {
         dayEl.innerHTML = `<div class=${s.dayItemContainer}>
-        <span class=${s.dayItemText}>${day.text}</span></div>`;
+        <span class=${s.dayItemText}>${day.text}</span>
+        ` + this.appendActionsIconToDate(day.value, daysWithActions, s.dayWithActions) + `
+        </div>`;
+        // if (this.appendActionsIconToDate(day.value, daysWithActions)) {
+        //   console.log(day.value);
+        // };
         dayEl.onclick = () => this.chooseDate(dayEl, dayValue);
       }
       box.appendChild(dayEl);
@@ -257,6 +270,17 @@ class Calendar {
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
     showMonthEl.textContent = monthNames[new Date(currentDate).getMonth()] + ' ' + new Date(currentDate).getFullYear();
+  }
+
+  appendActionsIconToDate(targetDate, actionsDate, actionClass) {
+    if (actionsDate && actionsDate.length > 0) {
+      for (const index in actionsDate) {
+        if (actionsDate[index].date === new Date(targetDate).toISOString()) {
+          return `<div class=${actionClass} style="background-color: ${actionsDate[index].color}" ></div>`;
+        }
+      }
+    }
+    return '';
   }
 }
 
