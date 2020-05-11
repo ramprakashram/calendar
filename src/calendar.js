@@ -1,7 +1,7 @@
 import utils from './utils';
 import s from './calendar.scss';
 
-const TOTAL_DAYS = 42; // 日历一共显示42天
+const TOTAL_DAYS = 42;
 const DEFAULT_FORMAT = 'yyyy/MM/dd';
 const today = utils.dateFormat(new Date(), DEFAULT_FORMAT);
 
