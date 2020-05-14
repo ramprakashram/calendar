@@ -1,6 +1,6 @@
 {
   "name": "pq-calendar-lite",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "calendar for pq",
   "main": "lib/calendar.js",
   "scripts": {

@@ -47,12 +47,11 @@ class Calendar {
     const { containerEl } = this.options;
     const controllerEl = utils.createElement('div', s.controller);
     const showMonthEl = utils.createElement('div', s.showMonth);
-    const prevArrow = utils.createElement('button', s.controllerArrow);
+    const prevArrow = utils.createElement('div', s.controllerArrow);
+    prevArrow.innerHTML = '&#128896;';
     prevArrow.onclick = () => this.switchMonth('prev');
-    const nextArrow = utils.createElement(
-      'button',
-      `${s.controllerArrow} ${s.nextArrow}`
-    );
+    const nextArrow = utils.createElement('div', s.controllerArrow);
+    nextArrow.innerHTML = '&#128898;';
     nextArrow.onclick = () => this.switchMonth('next');
 
     this.options.showMonthEl = showMonthEl;
@@ -91,11 +90,11 @@ class Calendar {
   }
 
   renderDays() {
-    const { chooseDate, daysEl, daysWithActions } = this.options;
+    const { chooseDate, daysEl, daysWithActions, startDay } = this.options;
     const days = this.generateCalendarGroup();
     const box = utils.createElement('div', s.dayBox);
-
-    // console.log(days);
+    const startDayIndex = startDay >= 0 ? this.getDayValue(startDay) : 0;
+    let dayCountForCurrentMonth = 0;
     // console.log(daysWithActions);
     days.forEach((day, index) => {
       let dayItemClass = this.options.showAwards ? s.dayItemWithAward : s.dayItem;
@@ -122,6 +121,8 @@ class Calendar {
 
       const dayEl = utils.createElement('div', dayItemClass);
       if (day.type === 'current') {
+        dayCountForCurrentMonth++;
+        dayEl.style = this.getGradientStyling(this.getColorForDate(day.value, daysWithActions)) + ' ' + this.getBorderRadius(day.value, startDayIndex, dayCountForCurrentMonth === 1);
         dayEl.innerHTML = `<div class=${s.dayItemContainer}>
         <span class=${s.dayItemText}>${day.text}</span>
         ` + this.appendActionsIconToDate(day.value, daysWithActions, s.dayWithActions) + `
@@ -264,12 +265,13 @@ class Calendar {
   }
 
   handelShowMonth() {
-    const { showMonthEl, currentDate, monthFormat } = this.options;
+    const { showMonthEl, currentDate, monthFormat, onMonthChangeClick } = this.options;
     // const showMonth = utils.dateFormat(new Date(currentDate), monthFormat);
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
     showMonthEl.textContent = monthNames[new Date(currentDate).getMonth()] + ' ' + new Date(currentDate).getFullYear();
+    onMonthChangeClick(new Date(currentDate).getMonth() + 1 + '/' + new Date(currentDate).getFullYear());
   }
 
   appendActionsIconToDate(targetDate, actionsDate, actionClass) {
@@ -281,6 +283,90 @@ class Calendar {
       }
     }
     return '';
+  }
+
+  getColorForDate(targetDate, actionsDate) {
+    const test = [
+      {
+        date: '2020-05-14T18:30:00.000Z',
+        color: 'blue'
+      },
+      {
+        date: '2020-05-03T18:30:00.000Z',
+        color: 'blue'
+      },
+      {
+        date: '2020-05-10T18:30:00.000Z',
+        color: 'red'
+      },
+      {
+        date: '2020-05-31T14:30:00.000Z',
+        color: 'yellow'
+      }
+    ];
+    const dateFormatForTarget = new Date(targetDate);
+    const isToday = dateFormatForTarget.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0);
+    // console.log('dateFormatForTarget.getDay() : ', dateFormatForTarget.getDay());
+    if (dateFormatForTarget.getDay() > 0 && !isToday) {
+      dateFormatForTarget.setDate(dateFormatForTarget.getDate() + (7 - dateFormatForTarget.getDay() + 1));
+      if ((dateFormatForTarget.setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0)) &&
+        (new Date(targetDate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0))) {
+        dateFormatForTarget.setDate(new Date().getDate() + 1);
+      }
+    } else {
+      dateFormatForTarget.setDate(dateFormatForTarget.getDate() + 1);
+    }
+    // console.log('dateFormatForTarget : ', dateFormatForTarget.toISOString());
+    if (test && test.length > 0) {
+      for (const index in test) {
+        if (test[index].date === dateFormatForTarget.toISOString()) {
+          return test[index].color;
+        }
+      }
+    }
+    return '';
+  }
+
+  getDayValue(day) {
+    const days = {
+      'sunday': 0,
+      'monday': 1,
+      'tuesday': 2,
+      'wednesday': 3,
+      'thursday': 4,
+      'friday': 5,
+      'saturday': 6
+    };
+
+    return days[day.toLowerCase()];
+  }
+
+  getGradientStyling(color) {
+    if (color.toLowerCase() === 'red') {
+      return 'background-image: linear-gradient(#FF3627, #FF7A4C);';
+    } else if (color.toLowerCase() === 'yellow') {
+      return 'background-image: linear-gradient(#F99F1B, #FFD110);';
+    } else if (color.toLowerCase() === 'blue') {
+      return 'background-image: linear-gradient(#64C7C7, #74D4F0);';
+    }
+  }
+
+  getBorderRadius(date, startDay, isBeginningOfWeek) {
+    const currentDateNoTimeString = new Date().setHours(0, 0, 0, 0);
+    const receivedDayNoTimeString = new Date(date).setHours(0, 0, 0, 0);
+    const receivedDay = new Date(date).getDay();
+    if (currentDateNoTimeString === receivedDayNoTimeString || receivedDay === 0 || this.isLastDay(date)) {
+      return 'border-radius: 0 44% 44% 0';
+    } else if (receivedDay === startDay || receivedDay === 1 || isBeginningOfWeek) {
+      return 'border-radius: 44% 0 0 44%';
+    } else {
+      return 'border-radius: 0';
+    }
+  }
+
+  isLastDay(date) {
+    const dt = new Date(date);
+    return new Date(dt.getTime() + 86400000).getDate() === 1;
   }
 }
 

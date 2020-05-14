@@ -14,10 +14,16 @@ const daysWithActions = [
 new Calendar({
   el: document.querySelector('#demo'),
   daysWithActions: daysWithActions,
-  onDayClick
+  startDay: 'Sunday',
+  onDayClick,
+  onMonthChangeClick
 });
 
 function onDayClick(date) {
   console.log(date);
+}
+
+function onMonthChangeClick(month) {
+  console.log(month);
 }
 
