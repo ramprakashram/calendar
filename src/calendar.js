@@ -289,7 +289,7 @@ class Calendar {
     const test = [
       {
         date: '2020-05-14T18:30:00.000Z',
-        color: 'blue'
+        color: 'yellow'
       },
       {
         date: '2020-05-03T18:30:00.000Z',
@@ -300,7 +300,7 @@ class Calendar {
         color: 'red'
       },
       {
-        date: '2020-05-31T14:30:00.000Z',
+        date: '2020-05-14T18:30:00.000Z',
         color: 'yellow'
       }
     ];
@@ -343,11 +343,11 @@ class Calendar {
 
   getGradientStyling(color) {
     if (color.toLowerCase() === 'red') {
-      return 'background-image: linear-gradient(#FF3627, #FF7A4C);';
+      return 'background-image: linear-gradient(#FF9976, #FFA889);';
     } else if (color.toLowerCase() === 'yellow') {
-      return 'background-image: linear-gradient(#F99F1B, #FFD110);';
+      return 'background-image: linear-gradient(#FFE068, #FFAF66);';
     } else if (color.toLowerCase() === 'blue') {
-      return 'background-image: linear-gradient(#64C7C7, #74D4F0);';
+      return 'background-image: linear-gradient(#86E6F6, #72DFDF);';
     }
   }
 
