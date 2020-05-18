@@ -2,11 +2,11 @@ import Calendar from '../src/calendar.js';
 
 const daysWithActions = [
   {
-    date: new Date('2020/05/01').toISOString(),
+    date: '2020-05-09T18:30:00.000Z',
     color: 'blue'
   },
   {
-    date: new Date('2020/05/04').toISOString(),
+    date: '2020-05-17T18:30:00.000Z',
     color: 'blue'
   }
 ];

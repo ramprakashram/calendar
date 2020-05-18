@@ -286,41 +286,41 @@ class Calendar {
   }
 
   getColorForDate(targetDate, actionsDate) {
-    const test = [
-      {
-        date: '2020-05-14T18:30:00.000Z',
-        color: 'yellow'
-      },
-      {
-        date: '2020-05-03T18:30:00.000Z',
-        color: 'blue'
-      },
-      {
-        date: '2020-05-10T18:30:00.000Z',
-        color: 'red'
-      },
-      {
-        date: '2020-05-14T18:30:00.000Z',
-        color: 'yellow'
-      }
-    ];
+    // const test = [
+    //   {
+    //     date: '2020-05-14T18:30:00.000Z',
+    //     color: 'yellow'
+    //   },
+    //   {
+    //     date: '2020-05-03T18:30:00.000Z',
+    //     color: 'blue'
+    //   },
+    //   {
+    //     date: '2020-05-10T18:30:00.000Z',
+    //     color: 'red'
+    //   },
+    //   {
+    //     date: '2020-05-14T18:30:00.000Z',
+    //     color: 'yellow'
+    //   }
+    // ];
     const dateFormatForTarget = new Date(targetDate);
     const isToday = dateFormatForTarget.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0);
     // console.log('dateFormatForTarget.getDay() : ', dateFormatForTarget.getDay());
     if (dateFormatForTarget.getDay() > 0 && !isToday) {
-      dateFormatForTarget.setDate(dateFormatForTarget.getDate() + (7 - dateFormatForTarget.getDay() + 1));
+      dateFormatForTarget.setDate(dateFormatForTarget.getDate() + (7 - dateFormatForTarget.getDay()));
       if ((dateFormatForTarget.setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0)) &&
         (new Date(targetDate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0))) {
-        dateFormatForTarget.setDate(new Date().getDate() + 1);
+        dateFormatForTarget.setDate(new Date().getDate());
       }
     } else {
-      dateFormatForTarget.setDate(dateFormatForTarget.getDate() + 1);
+      dateFormatForTarget.setDate(dateFormatForTarget.getDate());
     }
     // console.log('dateFormatForTarget : ', dateFormatForTarget.toISOString());
-    if (test && test.length > 0) {
-      for (const index in test) {
-        if (test[index].date === dateFormatForTarget.toISOString()) {
-          return test[index].color;
+    if (actionsDate && actionsDate.length > 0) {
+      for (const index in actionsDate) {
+        if (actionsDate[index].date === dateFormatForTarget.toISOString()) {
+          return actionsDate[index].color;
         }
       }
     }
