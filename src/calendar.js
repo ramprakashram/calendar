@@ -48,10 +48,10 @@ class Calendar {
     const controllerEl = utils.createElement('div', s.controller);
     const showMonthEl = utils.createElement('div', s.showMonth);
     const prevArrow = utils.createElement('div', s.controllerArrow);
-    prevArrow.innerHTML = '&#128896;';
+    prevArrow.innerHTML = '<i class="fa fa-caret-left" style="font-size:28px; color: #000000 "></i>';
     prevArrow.onclick = () => this.switchMonth('prev');
     const nextArrow = utils.createElement('div', s.controllerArrow);
-    nextArrow.innerHTML = '&#128898;';
+    nextArrow.innerHTML = '<i class="fa fa-caret-right" style="font-size:28px; color: #000000 "></i>';
     nextArrow.onclick = () => this.switchMonth('next');
 
     this.options.showMonthEl = showMonthEl;
@@ -277,7 +277,7 @@ class Calendar {
   appendActionsIconToDate(targetDate, actionsDate, actionClass) {
     if (actionsDate && actionsDate.length > 0) {
       for (const index in actionsDate) {
-        if (actionsDate[index].date === new Date(targetDate).toISOString()) {
+        if (new Date(actionsDate[index].date).setHours(0, 0, 0, 0) === new Date(targetDate).setHours(0, 0, 0, 0)) {
           return `<div class=${actionClass} style="background-color: ${actionsDate[index].color}" ></div>`;
         }
       }
@@ -319,7 +319,7 @@ class Calendar {
     // console.log('dateFormatForTarget : ', dateFormatForTarget.toISOString());
     if (actionsDate && actionsDate.length > 0) {
       for (const index in actionsDate) {
-        if (actionsDate[index].date === dateFormatForTarget.toISOString()) {
+        if (new Date(actionsDate[index].date).setHours(0, 0, 0, 0) === dateFormatForTarget.setHours(0, 0, 0, 0)) {
           return actionsDate[index].color;
         }
       }
