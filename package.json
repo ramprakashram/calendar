@@ -1,6 +1,6 @@
 {
   "name": "pq-calendar-lite",
-  "version": "0.1.15",
+  "version": "0.1.20",
   "description": "calendar for pq",
   "main": "lib/calendar.js",
   "scripts": {
@@ -56,6 +56,7 @@
     "angular",
     "mobile",
     "component",
-    "simbawu"
+    "simbawu",
+    "ram"
   ]
 }

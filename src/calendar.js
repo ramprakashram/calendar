@@ -55,7 +55,7 @@ class Calendar {
     nextArrow.onclick = () => this.switchMonth('next');
 
     this.options.showMonthEl = showMonthEl;
-    this.handelShowMonth();
+    this.handleShowMonth();
     controllerEl.appendChild(prevArrow);
     controllerEl.appendChild(showMonthEl);
     controllerEl.appendChild(nextArrow);
@@ -157,9 +157,10 @@ class Calendar {
     const nextMonthYear = nextMonthDate.getFullYear();
     const nextMonthMonth = nextMonthDate.getMonth() + 1;
     const currentMonthDays = new Date(currentYear, currentMonth, 0).getDate(); // 获取本月天数
-    const weekOfCurrentMonth = new Date(
+    const tempMonth = new Date(
       `${currentYear}/${utils.formatNumber(currentMonth)}/01`
-    ).getDay() - 1; // 获取本月第一天星期几
+    ).getDay();
+    const weekOfCurrentMonth = tempMonth === 0 ? 6 : (tempMonth - 1); // 获取本月第一天星期几
     const prevMonthDays = new Date(prevMonthYear, prevMonthMonth, 0).getDate(); // 获取上月天数
 
     const dayList = [];
@@ -225,7 +226,7 @@ class Calendar {
 
   switchMonth(action) {
     this.options.currentDate = this.switchMonthOfDate(action);
-    this.handelShowMonth();
+    this.handleShowMonth(true);
     this.renderDays();
   }
 
@@ -264,21 +265,25 @@ class Calendar {
     return newDate;
   }
 
-  handelShowMonth() {
+  handleShowMonth(isMonthChanged) {
     const { showMonthEl, currentDate, monthFormat, onMonthChangeClick } = this.options;
     // const showMonth = utils.dateFormat(new Date(currentDate), monthFormat);
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
     showMonthEl.textContent = monthNames[new Date(currentDate).getMonth()] + ' ' + new Date(currentDate).getFullYear();
-    onMonthChangeClick(new Date(currentDate).getMonth() + 1 + '/' + new Date(currentDate).getFullYear());
+    if (isMonthChanged) {
+      onMonthChangeClick(new Date(currentDate).getFullYear() + '/' + (new Date(currentDate).getMonth() + 1) + '/01');
+    }
   }
 
   appendActionsIconToDate(targetDate, actionsDate, actionClass) {
     if (actionsDate && actionsDate.length > 0) {
       for (const index in actionsDate) {
         if (new Date(actionsDate[index].date).setHours(0, 0, 0, 0) === new Date(targetDate).setHours(0, 0, 0, 0)) {
-          return `<div class=${actionClass} style="background-color: ${actionsDate[index].color}" ></div>`;
+          if (actionsDate[index].xp > 0) {
+            return `<div class=${actionClass} style="background-color: ${actionsDate[index].color}" ></div>`;
+          }
         }
       }
     }
@@ -304,14 +309,21 @@ class Calendar {
     //     color: 'yellow'
     //   }
     // ];
-    const dateFormatForTarget = new Date(targetDate);
+    let dateFormatForTarget = new Date(targetDate);
     const isToday = dateFormatForTarget.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0);
     // console.log('dateFormatForTarget.getDay() : ', dateFormatForTarget.getDay());
     if (dateFormatForTarget.getDay() > 0 && !isToday) {
+      const currentMonth = dateFormatForTarget.getMonth();
       dateFormatForTarget.setDate(dateFormatForTarget.getDate() + (7 - dateFormatForTarget.getDay()));
       if ((dateFormatForTarget.setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0)) &&
         (new Date(targetDate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0))) {
         dateFormatForTarget.setDate(new Date().getDate());
+      }
+      if (currentMonth < dateFormatForTarget.getMonth()) {
+        // console.log(currentMonth);
+        // console.log(new Date(dateFormatForTarget.getFullYear(), currentMonth + 1, 0).getDate());
+        dateFormatForTarget = new Date(dateFormatForTarget.getFullYear(), currentMonth + 1, 0);
+        // console.log(dateFormatForTarget)
       }
     } else {
       dateFormatForTarget.setDate(dateFormatForTarget.getDate());
@@ -351,13 +363,17 @@ class Calendar {
     }
   }
 
-  getBorderRadius(date, startDay, isBeginningOfWeek) {
+  getBorderRadius(date, startDay, isBeginningOfMonth) {
     const currentDateNoTimeString = new Date().setHours(0, 0, 0, 0);
     const receivedDayNoTimeString = new Date(date).setHours(0, 0, 0, 0);
     const receivedDay = new Date(date).getDay();
-    if (currentDateNoTimeString === receivedDayNoTimeString || receivedDay === 0 || this.isLastDay(date)) {
+    // console.log(isBeginningOfMonth, new Date(date).getDate());
+    // console.log(receivedDay);
+    if (isBeginningOfMonth && new Date(date).getDay() === 0) {
+      return 'border-radius: 44%';
+    } else if (currentDateNoTimeString === receivedDayNoTimeString || receivedDay === 0 || this.isLastDay(date)) {
       return 'border-radius: 0 44% 44% 0';
-    } else if (receivedDay === startDay || receivedDay === 1 || isBeginningOfWeek) {
+    } else if (receivedDay === startDay || receivedDay === 1 || isBeginningOfMonth) {
       return 'border-radius: 44% 0 0 44%';
     } else {
       return 'border-radius: 0';
