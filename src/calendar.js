@@ -317,7 +317,7 @@ class Calendar {
       dateFormatForTarget.setDate(dateFormatForTarget.getDate() + (7 - dateFormatForTarget.getDay()));
       if ((dateFormatForTarget.setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0)) &&
         (new Date(targetDate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0))) {
-        dateFormatForTarget.setDate(new Date().getDate());
+        dateFormatForTarget.setDate(new Date().getDate() - 1);
       }
       if (currentMonth < dateFormatForTarget.getMonth()) {
         // console.log(currentMonth);
@@ -364,14 +364,14 @@ class Calendar {
   }
 
   getBorderRadius(date, startDay, isBeginningOfMonth) {
-    const currentDateNoTimeString = new Date().setHours(0, 0, 0, 0);
+    const currentDate = new Date();
+    const prevDateNoTimeString = new Date(currentDate.setDate(currentDate.getDate() - 1)).setHours(0, 0, 0, 0);
     const receivedDayNoTimeString = new Date(date).setHours(0, 0, 0, 0);
     const receivedDay = new Date(date).getDay();
     // console.log(isBeginningOfMonth, new Date(date).getDate());
-    // console.log(receivedDay);
     if (isBeginningOfMonth && new Date(date).getDay() === 0) {
       return 'border-radius: 44%';
-    } else if (currentDateNoTimeString === receivedDayNoTimeString || receivedDay === 0 || this.isLastDay(date)) {
+    } else if (prevDateNoTimeString === receivedDayNoTimeString || receivedDay === 0 || this.isLastDay(date)) {
       return 'border-radius: 0 44% 44% 0';
     } else if (receivedDay === startDay || receivedDay === 1 || isBeginningOfMonth) {
       return 'border-radius: 44% 0 0 44%';
