@@ -34,6 +34,8 @@ class Calendar {
     this.renderContainer();
     this.renderController();
     this.renderContent();
+    const { onDayClick, format } = this.options;
+    onDayClick && onDayClick(utils.dateFormat(new Date(this.options.currentDate), format));
   }
 
   renderContainer() {
